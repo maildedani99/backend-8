@@ -22,5 +22,16 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('user', 'App\Http\Controllers\UserController@getAuthenticatedUser');
 });
 
+// users routes
+
 Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
+// products routes
+Route::get('product/all', 'App\Http\Controllers\ProductController@all');
+Route::get('product/{id}', 'App\Http\Controllers\ProductController@getById');
+
+Route::post('product/create', 'App\Http\Controllers\ProductController@create');
+
+// images routes
+Route::get('images/all', 'App\Http\Controllers\ImageController@all');
+Route::post('images/create', 'App\Http\Controllers\ImageController@create');
