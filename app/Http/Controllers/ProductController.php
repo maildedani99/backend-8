@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Novelty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -15,19 +16,32 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function all()
-    {
-        {
+    { {
             Log::info('Retrieving all products');
-            return response()->json(Product::all());
+            return response()->json(Product::with('images')->get());
         }
     }
 
     public function getById($id)
     {
-        Log::info('Retrieving product with id: '.$id);
+        Log::info('Retrieving product with id: ' . $id);
         $data = Product::findOrFail($id);
         $data['images'] = Image::where('product_id', $id)->get();
         return response()->json($data);
+    }
+
+
+
+    public function getByCategory($category_id)
+    {
+        Log::info('Retrieving product with category: ' . $category_id);
+        $data = Product::with('images')->where('category_id', $category_id)->get();
+        return response()->json($data);
+    }
+
+    public function delete($id)
+    {
+        Product::where('id', $id)->delete();
     }
 
     /**
@@ -37,13 +51,18 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
+        echo $request;
         $product = Product::create([
             'name' => $request->get('name'),
             'description' => $request->get('description'),
             'price' => $request->get('price'),
-
-           
+            'category_id' => $request->get('category_id'),
         ]);
+        Novelty::create([
+            'product_id' => $request->get('novelty')
+        ]);
+        //$product->novelties()->save($product->novelty);
+
         foreach ($request->images as $image) {
             $image = Image::create([
                 'url' => $image,
@@ -51,7 +70,11 @@ class ProductController extends Controller
             ]);
             $product->images()->save($image);
         }
-        return $product;
+
+        echo $product;
+        /*  $novelty = $image->novelty */
+
+        return response()->json($product);
     }
 
     /**

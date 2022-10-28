@@ -26,12 +26,29 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
 Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
-// products routes
-Route::get('product/all', 'App\Http\Controllers\ProductController@all');
-Route::get('product/{id}', 'App\Http\Controllers\ProductController@getById');
 
-Route::post('product/create', 'App\Http\Controllers\ProductController@create');
+
+// products routes
+Route::get('products/all', 'App\Http\Controllers\ProductController@all');
+Route::get('products/{id}', 'App\Http\Controllers\ProductController@getById');
+Route::post('products/delete/{id}', 'App\Http\Controllers\ProductController@delete');
+Route::post('products/create', 'App\Http\Controllers\ProductController@create');
+Route::get('products/getByCategory/{category_id}', 'App\Http\Controllers\ProductController@getByCategory');
 
 // images routes
 Route::get('images/all', 'App\Http\Controllers\ImageController@all');
 Route::post('images/create', 'App\Http\Controllers\ImageController@create');
+
+// categories routes 
+Route::get('categories/all', 'App\Http\Controllers\CategoryController@all');
+Route::post('categories/create', 'App\Http\Controllers\CategoryController@create');
+Route::post('categories/delete/{id}', 'App\Http\Controllers\CategoryController@delete');
+
+// novelties routes
+Route::post('novelties/create', 'App\Http\Controllers\NoveltyController@create');
+Route::get('novelties/all', 'App\Http\Controllers\NoveltyController@all');
+
+
+
+
+
