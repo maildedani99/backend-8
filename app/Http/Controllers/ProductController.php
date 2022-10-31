@@ -51,17 +51,17 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
-        echo $request;
         $product = Product::create([
             'name' => $request->get('name'),
             'description' => $request->get('description'),
             'price' => $request->get('price'),
             'category_id' => $request->get('category_id'),
         ]);
-        Novelty::create([
-            'product_id' => $request->get('novelty')
-        ]);
-        //$product->novelties()->save($product->novelty);
+        if ($request->novelty === 1) {
+            Novelty::create([
+                'product_id' => $product->id
+            ]);
+        }
 
         foreach ($request->images as $image) {
             $image = Image::create([
@@ -70,9 +70,6 @@ class ProductController extends Controller
             ]);
             $product->images()->save($image);
         }
-
-        echo $product;
-        /*  $novelty = $image->novelty */
 
         return response()->json($product);
     }
