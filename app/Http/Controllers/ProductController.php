@@ -17,7 +17,6 @@ class ProductController extends Controller
      */
     public function all()
     { {
-            Log::info('Retrieving all products');
             return response()->json(Product::with('images')->get());
         }
     }

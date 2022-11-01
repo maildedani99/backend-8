@@ -40,18 +40,18 @@ Route::get('images/all', 'App\Http\Controllers\ImageController@all');
 Route::post('images/create', 'App\Http\Controllers\ImageController@create');
 
 // categories routes 
-Route::get('categories/all', 'App\Http\Controllers\SubcategoryController@all');
-Route::post('categories/create', 'App\Http\Controllers\SubcategoryController@create');
-Route::post('categories/delete/{id}', 'App\Http\Controllers\SubcategoryController@delete');
+Route::get('categories/all', 'App\Http\Controllers\CategoryController@all');
+Route::post('categories/create', 'App\Http\Controllers\CategoryController@create');
+Route::post('categories/delete/{id}', 'App\Http\Controllers\CategoryController@delete');
 
 // novelties routes
 Route::post('novelties/create', 'App\Http\Controllers\NoveltyController@create');
 Route::get('novelties/all', 'App\Http\Controllers\NoveltyController@all');
 
 // subcategories routes 
-Route::get('subcategories/all', 'App\Http\Controllers\CategoryController@all');
-Route::post('subcategories/create', 'App\Http\Controllers\CategoryController@create');
-Route::post('subcategories/delete/{id}', 'App\Http\Controllers\CategoryController@delete');
+Route::get('subcategories/all', 'App\Http\Controllers\SubcategoryController@all');
+Route::post('subcategories/create', 'App\Http\Controllers\SubcategoryController@create');
+Route::post('subcategories/delete/{id}', 'App\Http\Controllers\SubcategoryController@delete');
 
 
 

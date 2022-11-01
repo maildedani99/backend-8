@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Subcategory;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -15,8 +17,8 @@ class CategoryController extends Controller
      */
     public function all()
     {
-        Log::info('Retrieving all images');
-        return response()->json(Category::all());
+        //return response()->json(Category::all());
+        return response()->json(Category::with('subcategories')->get());
     }
 
 
