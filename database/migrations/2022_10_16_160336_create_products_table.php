@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->mediumText('description');
             $table->float('price');
            $table->foreignId('category_id');
+           $table->foreignId('subcategory_id');
         });
     }
 
