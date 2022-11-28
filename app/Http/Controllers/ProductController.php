@@ -38,6 +38,13 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
+    public function getBySubCategory($subcategory_id)
+    {
+        Log::info('Retrieving product with category: ' . $subcategory_id);
+        $data = Product::with('images')->where('subcategory_id', $subcategory_id)->get();
+        return response()->json($data);
+    }
+
     public function delete($id)
     {
         Product::where('id', $id)->delete();
@@ -55,6 +62,7 @@ class ProductController extends Controller
             'description' => $request->get('description'),
             'price' => $request->get('price'),
             'category_id' => $request->get('category_id'),
+            'subcategory_id' => $request->get('subcategory_id'),
         ]);
         if ($request->novelty === 1) {
             Novelty::create([
