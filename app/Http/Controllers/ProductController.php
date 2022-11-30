@@ -23,9 +23,7 @@ class ProductController extends Controller
 
     public function getById($id)
     {
-        Log::info('Retrieving product with id: ' . $id);
-        $data = Product::findOrFail($id);
-        $data['images'] = Image::where('product_id', $id)->get();
+        $data = Product::with('images')->where('id', $id)->get();
         return response()->json($data);
     }
 
@@ -43,6 +41,18 @@ class ProductController extends Controller
         Log::info('Retrieving product with category: ' . $subcategory_id);
         $data = Product::with('images')->where('subcategory_id', $subcategory_id)->get();
         return response()->json($data);
+    }
+
+    public function novelties()
+    {
+        $products = Product::with('novelties', 'images')->get();
+        $novelties = [];
+        foreach ($products as $product) {
+            if ($product->novelties != null) {
+                array_push($novelties, $product);
+            }
+        }
+        return response()->json($novelties);
     }
 
     public function delete($id)
