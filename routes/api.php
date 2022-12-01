@@ -51,8 +51,9 @@ Route::post('categories/delete/{id}', 'App\Http\Controllers\CategoryController@d
 Route::post('novelties/create', 'App\Http\Controllers\NoveltyController@create');
 Route::get('novelties/all', 'App\Http\Controllers\NoveltyController@all');
 
-// subcategories routes 
+// subcategories routes getById
 Route::get('subcategories/all', 'App\Http\Controllers\SubcategoryController@all');
+Route::get('subcategories/getById/{id}', 'App\Http\Controllers\SubcategoryController@getById');
 Route::post('subcategories/create', 'App\Http\Controllers\SubcategoryController@create');
 Route::post('subcategories/delete/{id}', 'App\Http\Controllers\SubcategoryController@delete');
 

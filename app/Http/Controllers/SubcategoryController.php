@@ -17,6 +17,12 @@ class SubcategoryController extends Controller
         return response()->json(Subcategory::all());
     }
 
+    public function getById($id)
+    {
+        return response()->json(Subcategory::where('id', $id)->get());
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -26,7 +32,7 @@ class SubcategoryController extends Controller
     {
         $subcategory = Subcategory::create([
             'name' => $request->get('name'),
-            'category_id' =>$request->get('category_id')
+            'category_id' => $request->get('category_id')
         ]);
         return $subcategory;
     }
