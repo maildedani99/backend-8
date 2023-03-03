@@ -17,7 +17,7 @@ class ProductController extends Controller
      */
     public function all()
     { {
-            return response()->json(Product::with('images')->get());
+            return response()->json(Product::with('images', 'sizes')->get());
         }
     }
 
@@ -29,12 +29,12 @@ class ProductController extends Controller
 
 
 
-    public function getByCategory($category_id)
+    /*  public function getByCategory($category_id)
     {
         Log::info('Retrieving product with category: ' . $category_id);
         $data = Product::with('images')->where('category_id', $category_id)->get();
         return response()->json($data);
-    }
+    } */
 
     public function getBySubCategory($subcategory_id)
     {
@@ -71,9 +71,9 @@ class ProductController extends Controller
             'name' => $request->get('name'),
             'description' => $request->get('description'),
             'price' => $request->get('price'),
-            'category_id' => $request->get('category_id'),
             'subcategory_id' => $request->get('subcategory_id'),
         ]);
+        $product->sizes()->attach([1,2]);
         if ($request->novelty === 1) {
             Novelty::create([
                 'product_id' => $product->id
