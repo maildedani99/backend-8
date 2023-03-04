@@ -60,11 +60,7 @@ class ProductController extends Controller
         Product::where('id', $id)->delete();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create(Request $request)
     {
         $product = Product::create([
@@ -73,7 +69,7 @@ class ProductController extends Controller
             'price' => $request->get('price'),
             'subcategory_id' => $request->get('subcategory_id'),
         ]);
-        $product->sizes()->attach([1,2]);
+        $product->sizes()->attach($request->sizes);
         if ($request->novelty === 1) {
             Novelty::create([
                 'product_id' => $product->id
