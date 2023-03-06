@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->float('price');
            $table->foreignId('subcategory_id');
 
+
         });
     }
 

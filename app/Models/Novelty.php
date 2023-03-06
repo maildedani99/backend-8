@@ -14,7 +14,7 @@ class Novelty extends Model
     ];
 
 
-    public function product()
+    public function products()
     {
         return $this->hasMany(Product::class);
     }

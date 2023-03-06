@@ -17,13 +17,13 @@ class ProductController extends Controller
      */
     public function all()
     { {
-            return response()->json(Product::with('images', 'sizes')->get());
+            return response()->json(Product::with('images', 'sizes')->get()->all());
         }
     }
 
     public function getById($id)
     {
-        $data = Product::with('images')->where('id', $id)->get();
+        $data = Product::with('images', 'sizes')->where('id', $id)->get();
         return response()->json($data);
     }
 
@@ -68,6 +68,7 @@ class ProductController extends Controller
             'description' => $request->get('description'),
             'price' => $request->get('price'),
             'subcategory_id' => $request->get('subcategory_id'),
+            
         ]);
         $product->sizes()->attach($request->sizes);
         if ($request->novelty === 1) {
