@@ -16,9 +16,8 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function all()
-    { {
-            return response()->json(Product::with('images', 'sizes')->get()->all());
-        }
+    {
+        return response()->json(Product::with('images', 'sizes')->get()->all());
     }
 
     public function getById($id)
@@ -26,6 +25,15 @@ class ProductController extends Controller
         $data = Product::with('images', 'sizes')->where('id', $id)->get();
         return response()->json($data);
     }
+
+
+    public function outlet()
+    {
+
+        $data = Product::with('images', 'sizes')->where('outlet', true)->get();
+        return response()->json($data);
+    }
+
 
 
 
@@ -68,7 +76,10 @@ class ProductController extends Controller
             'description' => $request->get('description'),
             'price' => $request->get('price'),
             'subcategory_id' => $request->get('subcategory_id'),
-            
+            'outlet' => $request->get('outlet'),
+            'discount' => $request->get('discount'),
+            'reduced_price' => $request->get('reduced_price'),
+
         ]);
         $product->sizes()->attach($request->sizes);
         if ($request->novelty === 1) {

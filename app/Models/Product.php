@@ -13,7 +13,10 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'subcategory_id'
+        'subcategory_id',
+            'outlet',
+            'discount',
+            'reduced_price'
     ];
 
     public function images()

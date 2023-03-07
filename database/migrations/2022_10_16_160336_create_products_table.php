@@ -19,9 +19,10 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->mediumText('description');
             $table->float('price');
-           $table->foreignId('subcategory_id');
-
-
+            $table->foreignId('subcategory_id');
+            $table->boolean('outlet')->default(false);
+            $table->boolean('discount')->default(false);
+            $table->float('reduced_price')->default(null);
         });
     }
 

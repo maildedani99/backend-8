@@ -33,9 +33,10 @@ Route::get('products/all', 'App\Http\Controllers\ProductController@all');
 Route::get('products/{id}', 'App\Http\Controllers\ProductController@getById');
 Route::post('products/delete/{id}', 'App\Http\Controllers\ProductController@delete');
 Route::post('products/create', 'App\Http\Controllers\ProductController@create');
-//Route::get('products/getByCategory/{category_id}', 'App\Http\Controllers\ProductController@getByCategory');
+//Route::get('products/outlet', 'App\Http\Controllers\ProductController@outlet');
 Route::get('products/getBySubCategory/{category_id}', 'App\Http\Controllers\ProductController@getBySubCategory');
 Route::get('products/novelties/all', 'App\Http\Controllers\ProductController@novelties');
+Route::get('products/outlet/all',  'App\Http\Controllers\ProductController@outlet' );
 
 
 // images routes
