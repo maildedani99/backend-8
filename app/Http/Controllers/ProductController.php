@@ -29,8 +29,13 @@ class ProductController extends Controller
 
     public function outlet()
     {
-
         $data = Product::with('images', 'sizes')->where('outlet', true)->get();
+        return response()->json($data);
+    }
+
+    public function discounts()
+    {
+        $data = Product::with('images', 'sizes')->where('discount', true)->where('outlet', false)->get();
         return response()->json($data);
     }
 
@@ -47,13 +52,13 @@ class ProductController extends Controller
     public function getBySubCategory($subcategory_id)
     {
         Log::info('Retrieving product with category: ' . $subcategory_id);
-        $data = Product::with('images')->where('subcategory_id', $subcategory_id)->get();
+        $data = Product::with('images')->where('subcategory_id', $subcategory_id)->where('outlet', false)->get();
         return response()->json($data);
     }
 
     public function novelties()
     {
-        $products = Product::with('novelties', 'images')->get();
+        $products = Product::with('novelties', 'images')->where('outlet', false)->get();
         $novelties = [];
         foreach ($products as $product) {
             if ($product->novelties != null) {
@@ -82,7 +87,7 @@ class ProductController extends Controller
 
         ]);
         $product->sizes()->attach($request->sizes);
-        if ($request->novelty === 1) {
+        if ($request->novelty === true) {
             Novelty::create([
                 'product_id' => $product->id
             ]);
