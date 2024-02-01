@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Size extends Model
+class Color extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'color',
     ];
 
     public function products()
@@ -18,9 +19,12 @@ class Size extends Model
         return $this->belongsToMany(Product::class);
     }
 
+
     public function stock()
     {
         return $this->hasMany(Stock::class);
     }
+
+   
 
 }

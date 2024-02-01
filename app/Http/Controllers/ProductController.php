@@ -17,12 +17,15 @@ class ProductController extends Controller
      */
     public function all()
     {
-        return response()->json(Product::with('images', 'sizes')->get()->all());
+        return response()->json(Product::with('images')
+        ->has('stock')
+        ->get()
+        ->all());
     }
 
     public function getById($id)
     {
-        $data = Product::with('images', 'sizes')->where('id', $id)->get();
+        $data = Product::with('images', 'stock')->where('id', $id)->get();
         return response()->json($data);
     }
 
@@ -35,7 +38,7 @@ class ProductController extends Controller
 
     public function discounts()
     {
-        $data = Product::with('images', 'sizes')->where('discount', true)->where('outlet', false)->get();
+        $data = Product::with('images', 'sizes')->where('discount', true)->get();
         return response()->json($data);
     }
 
@@ -52,19 +55,20 @@ class ProductController extends Controller
     public function getBySubCategory($subcategory_id)
     {
         Log::info('Retrieving product with category: ' . $subcategory_id);
-        $data = Product::with('images')->where('subcategory_id', $subcategory_id)->where('outlet', false)->get();
+        $data = Product::with('images')
+        ->where('subcategory_id', $subcategory_id)
+        ->has('stock')
+        ->get();
         return response()->json($data);
     }
 
     public function novelties()
     {
-        $products = Product::with('novelties', 'images')->where('outlet', false)->get();
-        $novelties = [];
-        foreach ($products as $product) {
-            if ($product->novelties != null) {
-                array_push($novelties, $product);
-            }
-        }
+        $novelties = Product::with(['novelties', 'images', 'stock'])
+        ->where('outlet', false)
+        ->where('discount', false)
+        ->has('stock')  // Filtra solo los productos que tienen al menos un registro en la tabla stock
+        ->get();
         return response()->json($novelties);
     }
 
@@ -86,13 +90,11 @@ class ProductController extends Controller
             'reduced_price' => $request->get('reduced_price'),
 
         ]);
-        $product->sizes()->attach($request->sizes);
         if ($request->novelty === true) {
             Novelty::create([
                 'product_id' => $product->id
             ]);
         }
-
         foreach ($request->images as $image) {
             $image = Image::create([
                 'url' => $image,

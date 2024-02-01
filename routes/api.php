@@ -63,6 +63,27 @@ Route::get('sizes/all', 'App\Http\Controllers\SizeController@all');
 Route::post('sizes/create', 'App\Http\Controllers\SizeController@create');
 Route::post('sizes/delete/{id}', 'App\Http\Controllers\SizeController@delete');
 
+// colors routes
+Route::get('colors/all', 'App\Http\Controllers\ColorController@all');
+Route::post('colors/create', 'App\Http\Controllers\ColorController@create');
+Route::post('colors/delete/{id}', 'App\Http\Controllers\ColorController@delete');
+
+// Stock routes
+Route::get('stock/all', 'App\Http\Controllers\StockController@all');
+Route::post('stock/create', 'App\Http\Controllers\StockController@create');
+Route::post('stock/delete/{id}', 'App\Http\Controllers\StockController@delete');
+
+
+// email routes
+
+Route::get('email/all', 'App\Http\Controllers\EmailController@all');
+Route::post('email/create', 'App\Http\Controllers\EmailController@create');
+Route::post('email/delete', 'App\Http\Controllers\EmailController@delete');
+
+
+Route::options('/api/email/create', function () {
+    return response()->json([], 200);
+});
 
 
 

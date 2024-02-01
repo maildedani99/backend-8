@@ -14,9 +14,9 @@ class Product extends Model
         'description',
         'price',
         'subcategory_id',
-            'outlet',
-            'discount',
-            'reduced_price'
+        'outlet',
+        'discount',
+        'reduced_price'
     ];
 
     public function images()
@@ -34,4 +34,15 @@ class Product extends Model
         return $this->belongsToMany(Size::class);
     }
 
+    public function colors()
+    {
+        return $this->belongsToMany(Color::class);
+    }
+
+    public function stock()
+    {
+        return $this->hasMany(Stock::class);
+    }
+
+    
 }
