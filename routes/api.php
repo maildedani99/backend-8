@@ -80,6 +80,35 @@ Route::get('email/all', 'App\Http\Controllers\EmailController@all');
 Route::post('email/create', 'App\Http\Controllers\EmailController@create');
 Route::post('email/delete', 'App\Http\Controllers\EmailController@delete');
 
+// customers routes
+
+Route::get('customers/all', 'App\Http\Controllers\CustomerController@all');
+Route::post('customers/create', 'App\Http\Controllers\CustomerController@create');
+Route::post('customers/delete', 'App\Http\Controllers\CustomerController@delete');
+
+// orders routes
+
+Route::get('orders/all', 'App\Http\Controllers\OrderController@all');
+Route::post('orders/create', 'App\Http\Controllers\OrderController@create');
+Route::post('orders/completeOrderProcess', 'App\Http\Controllers\OrderProcessController@completeOrderProcess');
+Route::post('orders/delete', 'App\Http\Controllers\OrderController@delete');
+
+//  orderItems routes
+
+Route::get('orderItems/all', 'App\Http\Controllers\OrderItemController@all');
+Route::get('orderItems/getItemsByOrderId/{orderId}', 'App\Http\Controllers\OrderItemController@getItemsByOrderId');
+
+Route::post('orderItems/addItemsToOrder', 'App\Http\Controllers\OrderItemController@addItemsToOrder');
+Route::post('orderItems/delete', 'App\Http\Controllers\OrderItemController@delete');
+
+// redsys routes
+Route::post('redsys/generate-signature', 'App\Http\Controllers\RedsysController@generateSignature');
+Route::post('redsys/handle-notification', 'App\Http\Controllers\RedsysController@handleNotification');
+
+Route::post('redsys/handle-notificationOk', 'App\Http\Controllers\RedsysController@handleNotificationOk');
+
+
+
 
 Route::options('/api/email/create', function () {
     return response()->json([], 200);
