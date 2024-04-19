@@ -12,39 +12,40 @@ class RedsysController extends Controller
 
 
     public function generateSignature(Request $request)
-    {
-        $secretKey = base64_decode('sq7HjrUOBfKmC576ILgskD5srU870gJ7');
-        $amount = $request->amount;
-        $order = $request->order;
+{
+    $secretKey = base64_decode('sq7HjrUOBfKmC576ILgskD5srU870gJ7');
+    $amount = $request->amount;
+    $order = $request->order;
 
+    // Convertir el monto a un formato adecuado (eliminar el punto decimal)
+    $amount = str_replace('.', '', $amount);
+    $amount = intval($amount);
 
+    Log::info('request generate signature', ['amount'=>$amount, 'order'=>$order]);
 
+    $json = [
+        "DS_MERCHANT_AMOUNT" => $amount,
+        "DS_MERCHANT_CURRENCY" => "978",
+        "DS_MERCHANT_MERCHANTCODE" => "347790438",
+        "DS_MERCHANT_MERCHANTURL" => "http://127.0.0.1:8000/api/redsys/handle-notification",
+        "DS_MERCHANT_ORDER" => $order,
+        "DS_MERCHANT_TERMINAL" => "1",
+        "DS_MERCHANT_TRANSACTIONTYPE" => "0",
+        "DS_MERCHANT_URLKO" => "https://localhost:3000/payOk",
+        "DS_MERCHANT_URLOK" => "https://localhost:3000/payOk"
+    ];
+    $json = base64_encode(json_encode($json));
 
-        $json = [
-            "DS_MERCHANT_AMOUNT" => $amount,
-            "DS_MERCHANT_CURRENCY" => "978",
-            "DS_MERCHANT_MERCHANTCODE" => "347790438",
-            "DS_MERCHANT_MERCHANTURL" => "https://1094-139-47-40-85.ngrok-free.app/api/redsys/handle-notification",
-            "DS_MERCHANT_ORDER" => $order,
-            "DS_MERCHANT_MERCHANTDATA" => $order,
-            "DS_MERCHANT_TERMINAL" => "1",
-            "DS_MERCHANT_DIRECTPAYMENT" => "1",
-            "DS_MERCHANT_TRANSACTIONTYPE" => "0",
-            "DS_MERCHANT_URLKO" => "https://localhost:3000/payOk",
-            "DS_MERCHANT_URLOK" => "https://localhost:3000/payOk"
-        ];
-        $json = base64_encode(json_encode($json));
+    $key = $this->encrypt3DES($order, $secretKey);
+    $signature = hash_hmac('sha256', $json, $key, true);
+    $signature = base64_encode($signature);
 
-        $key = $this->encrypt3DES($order, $secretKey);
-        $signature = hash_hmac('sha256', $json, $key, true);
-        $signature = base64_encode($signature);
+    return response()->json([
+        'signature' => $signature,
+        'jsonData' => $json
+    ], 200);
+}
 
-        return response()->json([
-            'Ds_MerchantParameters' => $json,
-            'Ds_Signature' => $signature,
-            'Ds_SignatureVersion' => 'HMAC_SHA256_V1',
-        ]);
-    }
 
     private function encrypt3DES($message, $key)
     {

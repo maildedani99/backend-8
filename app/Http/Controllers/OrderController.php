@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -11,20 +12,26 @@ class OrderController extends Controller
 
 
     public function all()
-{
-    $orders = Order::with('items')->get();
-    return response()->json($orders);
-}
+    {
+        $orders = Order::with('items')->get();
+        return response()->json($orders);
+    }
 
     public function create(Request $request)
-{
-    $order = new Order();
-    $order->customer_id = $request->customer_id; // Asegúrate de enviar el ID del cliente en la solicitud
-    $order->total = $request->total; // Asume que 'total' es enviado en la solicitud
-    $order->status = 'pending'; // Marcamos inicialmente el pedido como pendiente
-    $order->ds_order = $request->ds_order; // El identificador del pedido en el sistema de Redsys
-    $order->save();
+    {
 
-    return response()->json($order, 201);
-}
+        $order = new Order();
+        $order->customer_id = $request->customer_id;
+        $order->total = $request->orderAmount;
+        $order->status = 'pending';
+        Log::info('order total', ['total'=>$order->total]);
+
+        try {
+            $order->save();
+            return response()->json($order, 201);
+        } catch (\Exception $e) {
+            Log::error('Order processing failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Order processing failed', 'details' => $e->getMessage()], 500);
+        }
+    }
 }

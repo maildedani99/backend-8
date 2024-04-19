@@ -13,16 +13,21 @@ class OrderProcessController extends Controller
 {
     public function completeOrderProcess(Request $request)
     {
+        Log::info('se inicia completeOrderProcess ');
         DB::beginTransaction();
-
         try {
             $customerData = $request->input('customer');
             $orderData = $request->input('order');
+            Log::info('log for order', ['order'=>$orderData]);
             $items = $request->input('items');
 
             $customer = Customer::create($customerData);
 
+            $orderData['ds_order'] = Order::generateDsOrder();
             $orderData['customer_id'] = $customer->id;
+            $orderData['total'] = $orderData['orderAmount'];
+
+            Log::info('orderData', ['orderData for reate'=>$orderData]);
 
             $order = Order::create($orderData);
 
@@ -33,7 +38,15 @@ class OrderProcessController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Order processed successfully'], 201);
+            return response()->json([
+                'message' => 'Order processed successfully',
+                'order' => [
+                    'ds_order' => $order->ds_order,
+                    'total' => $order->total,
+                    'customer_id' => $order->customer_id,
+                    // Añade aquí cualquier otro dato que necesites
+                ],
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
