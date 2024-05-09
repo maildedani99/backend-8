@@ -18,6 +18,13 @@ class ProductController extends Controller
     public function all()
     {
         return response()->json(Product::with('images')
+        ->get()
+        ->all());
+    }
+
+    public function allStock()
+    {
+        return response()->json(Product::with('images')
         ->has('stock')
         ->get()
         ->all());

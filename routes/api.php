@@ -30,6 +30,7 @@ Route::post('login', 'App\Http\Controllers\UserController@authenticate');
 
 // products routes
 Route::get('products/all', 'App\Http\Controllers\ProductController@all');
+Route::get('products/allStock', 'App\Http\Controllers\ProductController@allStock');
 Route::get('products/{id}', 'App\Http\Controllers\ProductController@getById');
 Route::post('products/delete/{id}', 'App\Http\Controllers\ProductController@delete');
 Route::post('products/create', 'App\Http\Controllers\ProductController@create');
