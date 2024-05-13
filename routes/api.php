@@ -20,11 +20,30 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('user', 'App\Http\Controllers\UserController@getAuthenticatedUser');
+    Route::post('register', 'App\Http\Controllers\UserController@register');
+    Route::post('products/create', 'App\Http\Controllers\ProductController@create');
+    Route::post('images/create', 'App\Http\Controllers\ImageController@create');
+    Route::post('categories/create', 'App\Http\Controllers\CategoryController@create');
+    Route::post('novelties/create', 'App\Http\Controllers\NoveltyController@create');
+    Route::post('subcategories/create', 'App\Http\Controllers\SubcategoryController@create');
+    Route::post('subcategories/delete/{id}', 'App\Http\Controllers\SubcategoryController@delete');
+    Route::post('categories/delete/{id}', 'App\Http\Controllers\CategoryController@delete');
+    Route::post('products/delete/{id}', 'App\Http\Controllers\ProductController@delete');
+    Route::post('sizes/create', 'App\Http\Controllers\SizeController@create');
+    Route::post('sizes/delete/{id}', 'App\Http\Controllers\SizeController@delete');
+    Route::post('colors/create', 'App\Http\Controllers\ColorController@create');
+    Route::post('colors/delete/{id}', 'App\Http\Controllers\ColorController@delete');
+    Route::post('stock/create', 'App\Http\Controllers\StockController@create');
+    Route::post('stock/delete/{id}', 'App\Http\Controllers\StockController@delete');
+    Route::post('email/delete', 'App\Http\Controllers\EmailController@delete');
+    Route::post('customers/create', 'App\Http\Controllers\CustomerController@create');
+    Route::post('customers/delete', 'App\Http\Controllers\CustomerController@delete');
+    Route::post('orders/create', 'App\Http\Controllers\OrderController@create');
+    Route::post('orders/delete', 'App\Http\Controllers\OrderController@delete');
 });
 
 // users routes
 
-Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
 
 
@@ -32,67 +51,54 @@ Route::post('login', 'App\Http\Controllers\UserController@authenticate');
 Route::get('products/all', 'App\Http\Controllers\ProductController@all');
 Route::get('products/allStock', 'App\Http\Controllers\ProductController@allStock');
 Route::get('products/{id}', 'App\Http\Controllers\ProductController@getById');
-Route::post('products/delete/{id}', 'App\Http\Controllers\ProductController@delete');
-Route::post('products/create', 'App\Http\Controllers\ProductController@create');
 Route::get('products/getBySubCategory/{category_id}', 'App\Http\Controllers\ProductController@getBySubCategory');
 Route::get('products/novelties/all', 'App\Http\Controllers\ProductController@novelties');
-Route::get('products/outlet/all',  'App\Http\Controllers\ProductController@outlet' );
+Route::get('products/outlet/all',  'App\Http\Controllers\ProductController@outlet');
 Route::get('products/discounts/all', 'App\Http\Controllers\ProductController@discounts');
 
 
 // images routes
 Route::get('images/all', 'App\Http\Controllers\ImageController@all');
-Route::post('images/create', 'App\Http\Controllers\ImageController@create');
 
 // categories routes
 Route::get('categories/all', 'App\Http\Controllers\CategoryController@all');
-Route::post('categories/create', 'App\Http\Controllers\CategoryController@create');
-Route::post('categories/delete/{id}', 'App\Http\Controllers\CategoryController@delete');
 
 // novelties routes
-Route::post('novelties/create', 'App\Http\Controllers\NoveltyController@create');
 Route::get('novelties/all', 'App\Http\Controllers\NoveltyController@all');
 
 // subcategories routes
 Route::get('subcategories/all', 'App\Http\Controllers\SubcategoryController@all');
 Route::get('subcategories/getById/{id}', 'App\Http\Controllers\SubcategoryController@getById');
-Route::post('subcategories/create', 'App\Http\Controllers\SubcategoryController@create');
-Route::post('subcategories/delete/{id}', 'App\Http\Controllers\SubcategoryController@delete');
 
 // sizes routes
 Route::get('sizes/all', 'App\Http\Controllers\SizeController@all');
-Route::post('sizes/create', 'App\Http\Controllers\SizeController@create');
-Route::post('sizes/delete/{id}', 'App\Http\Controllers\SizeController@delete');
+
 
 // colors routes
 Route::get('colors/all', 'App\Http\Controllers\ColorController@all');
-Route::post('colors/create', 'App\Http\Controllers\ColorController@create');
-Route::post('colors/delete/{id}', 'App\Http\Controllers\ColorController@delete');
+
 
 // Stock routes
 Route::get('stock/all', 'App\Http\Controllers\StockController@all');
-Route::post('stock/create', 'App\Http\Controllers\StockController@create');
-Route::post('stock/delete/{id}', 'App\Http\Controllers\StockController@delete');
+
 
 
 // email routes
 
 Route::get('email/all', 'App\Http\Controllers\EmailController@all');
 Route::post('email/create', 'App\Http\Controllers\EmailController@create');
-Route::post('email/delete', 'App\Http\Controllers\EmailController@delete');
+
 
 // customers routes
 
 Route::get('customers/all', 'App\Http\Controllers\CustomerController@all');
-Route::post('customers/create', 'App\Http\Controllers\CustomerController@create');
-Route::post('customers/delete', 'App\Http\Controllers\CustomerController@delete');
+
 
 // orders routes
 
 Route::get('orders/all', 'App\Http\Controllers\OrderController@all');
-Route::post('orders/create', 'App\Http\Controllers\OrderController@create');
 Route::post('orders/completeOrderProcess', 'App\Http\Controllers\OrderProcessController@completeOrderProcess');
-Route::post('orders/delete', 'App\Http\Controllers\OrderController@delete');
+
 
 //  orderItems routes
 
@@ -114,7 +120,3 @@ Route::post('redsys/handle-notificationOk', 'App\Http\Controllers\RedsysControll
 Route::options('/api/email/create', function () {
     return response()->json([], 200);
 });
-
-
-
-
