@@ -29,9 +29,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
-        "classmap": [
-            "vendor/redsys"
-        ]
+        "classmap": []
     },
     "autoload-dev": {
         "psr-4": {
