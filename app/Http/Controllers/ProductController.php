@@ -39,13 +39,13 @@ class ProductController extends Controller
 
     public function outlet()
     {
-        $data = Product::with('images', 'sizes')->where('outlet', true)->get();
+        $data = Product::with('images', 'sizes', 'stock')->where('outlet', true)->get();
         return response()->json($data);
     }
 
     public function discounts()
     {
-        $data = Product::with('images', 'sizes')->where('discount', true)->get();
+        $data = Product::with('images', 'sizes', 'stock')->where('discount', true)->get();
         return response()->json($data);
     }
 

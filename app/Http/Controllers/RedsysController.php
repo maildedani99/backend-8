@@ -27,12 +27,12 @@ class RedsysController extends Controller
         "DS_MERCHANT_AMOUNT" => $amount,
         "DS_MERCHANT_CURRENCY" => "978",
         "DS_MERCHANT_MERCHANTCODE" => "347790438",
-        "DS_MERCHANT_MERCHANTURL" => "http://127.0.0.1:8000/api/redsys/handle-notification",
+        "DS_MERCHANT_MERCHANTURL" => "http://server.usuriaga.com/api/redsys/handle-notification",
         "DS_MERCHANT_ORDER" => $order,
         "DS_MERCHANT_TERMINAL" => "1",
         "DS_MERCHANT_TRANSACTIONTYPE" => "0",
-        "DS_MERCHANT_URLKO" => "https://localhost:3000/payOk",
-        "DS_MERCHANT_URLOK" => "https://localhost:3000/payOk"
+        "DS_MERCHANT_URLKO" => "https://usuriaga.com/payOk",
+        "DS_MERCHANT_URLOK" => "https://usuriaga.com/payOk"
     ];
     $json = base64_encode(json_encode($json));
 
