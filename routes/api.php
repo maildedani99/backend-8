@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('user', 'App\Http\Controllers\UserController@getAuthenticatedUser');
-    Route::post('register', 'App\Http\Controllers\UserController@register');
+
     Route::post('products/create', 'App\Http\Controllers\ProductController@create');
     Route::post('images/create', 'App\Http\Controllers\ImageController@create');
     Route::post('categories/create', 'App\Http\Controllers\CategoryController@create');
@@ -43,7 +43,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 });
 
 // users routes
-
+Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
 
 
