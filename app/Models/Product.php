@@ -23,10 +23,24 @@ class Product extends Model
     {
         return $this->hasMany(Image::class);
     }
+    public function outlet()
+    {
+        return $this->hasOne(Outlet::class);
+    }
+
+    public function novelty()
+    {
+        return $this->hasOne(Novelty::class);
+    }
 
     public function novelties()
     {
         return $this->hasOne(Novelty::class);
+    }
+
+    public function outlets()
+    {
+        return $this->hasOne(Outlet::class);
     }
 
     public function sizes()
@@ -44,5 +58,5 @@ class Product extends Model
         return $this->hasMany(Stock::class);
     }
 
-    
+
 }

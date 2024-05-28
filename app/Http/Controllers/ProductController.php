@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Novelty;
+use App\Models\Outlet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -39,18 +40,33 @@ class ProductController extends Controller
 
     public function outlet()
     {
-        $data = Product::with('images', 'sizes', 'stock')->where('outlet', true)->get();
-        return response()->json($data);
+        $outlets = Product::with(['outlet', 'images', 'stock'])
+        ->has('stock')
+        ->has('outlet')
+        ->get();
+        return response()->json($outlets);
+    }
+
+    public function novelties()
+    {
+        $novelties = Product::with(['images', 'stock'])
+        ->has('stock')
+        ->has('novelties')  // Filtra solo los productos que tienen al menos un registro en la tabla stock
+        ->get();
+        return response()->json($novelties);
     }
 
     public function discounts()
     {
-        $data = Product::with('images', 'sizes', 'stock')->where('discount', true)->get();
-        return response()->json($data);
+        return response()->json(Product::with('images')
+        ->has('stock')
+        ->where(function ($query) {
+            $query->where('reduced_price', '>', 0)
+                  ->orWhereNull('reduced_price');
+        })
+        ->get()
+        ->all());
     }
-
-
-
 
     /*  public function getByCategory($category_id)
     {
@@ -69,15 +85,6 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
-    public function novelties()
-    {
-        $novelties = Product::with(['novelties', 'images', 'stock'])
-        ->where('outlet', false)
-        ->where('discount', false)
-        ->has('stock')  // Filtra solo los productos que tienen al menos un registro en la tabla stock
-        ->get();
-        return response()->json($novelties);
-    }
 
     public function delete($id)
     {
@@ -92,13 +99,16 @@ class ProductController extends Controller
             'description' => $request->get('description'),
             'price' => $request->get('price'),
             'subcategory_id' => $request->get('subcategory_id'),
-            'outlet' => $request->get('outlet'),
-            'discount' => $request->get('discount'),
             'reduced_price' => $request->get('reduced_price'),
 
         ]);
         if ($request->novelty === true) {
             Novelty::create([
+                'product_id' => $product->id
+            ]);
+        }
+        if ($request->outlet === true) {
+            Outlet::create([
                 'product_id' => $product->id
             ]);
         }

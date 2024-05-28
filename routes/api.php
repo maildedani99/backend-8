@@ -56,6 +56,8 @@ Route::get('products/novelties/all', 'App\Http\Controllers\ProductController@nov
 Route::get('products/outlet/all',  'App\Http\Controllers\ProductController@outlet');
 Route::get('products/discounts/all', 'App\Http\Controllers\ProductController@discounts');
 
+// outlet routes
+Route::get('outlet/all', 'App\Http\Controllers\NOutletController@all');
 
 // images routes
 Route::get('images/all', 'App\Http\Controllers\ImageController@all');

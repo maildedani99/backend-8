@@ -80,8 +80,10 @@ class NoveltyController extends Controller
      * @param  \App\Models\Novelty  $novelty
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Novelty $novelty)
+    public function delete(Novelty $novelty)
     {
-        //
+        $novelty->delete();
+
+        return response()->json(null, 204);
     }
 }
