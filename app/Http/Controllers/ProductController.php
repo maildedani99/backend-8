@@ -51,7 +51,7 @@ class ProductController extends Controller
     {
         $novelties = Product::with(['images', 'stock'])
         ->has('stock')
-        ->has('novelties')  // Filtra solo los productos que tienen al menos un registro en la tabla stock
+        ->has('novelties')  // Filtra solo los productos que tienen al menos un registro en la tabla st ock
         ->get();
         return response()->json($novelties);
     }
