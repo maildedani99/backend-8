@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Models\Product;
 use App\Models\Novelty;
 use App\Models\Outlet;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -94,34 +95,49 @@ class ProductController extends Controller
 
     public function create(Request $request)
     {
-        $product = Product::create([
-            'name' => $request->get('name'),
-            'description' => $request->get('description'),
-            'price' => $request->get('price'),
-            'subcategory_id' => $request->get('subcategory_id'),
-            'reduced_price' => $request->get('reduced_price'),
+        try {
+            $product = Product::create([
+                'name' => $request->get('name'),
+                'description' => $request->get('description'),
+                'price' => $request->get('price'),
+                'subcategory_id' => $request->get('subcategory_id'),
+                'reduced_price' => $request->get('reduced_price'),
+            ]);
 
-        ]);
-        if ($request->novelty === true) {
-            Novelty::create([
-                'product_id' => $product->id
-            ]);
-        }
-        if ($request->outlet === true) {
-            Outlet::create([
-                'product_id' => $product->id
-            ]);
-        }
-        foreach ($request->images as $image) {
-            $image = Image::create([
-                'url' => $image,
-                'product_id' => $product->id
-            ]);
-            $product->images()->save($image);
-        }
+            if ($request->novelty === true) {
+                Novelty::create([
+                    'product_id' => $product->id
+                ]);
+            }
+            if ($request->outlet === true) {
+                Outlet::create([
+                    'product_id' => $product->id
+                ]);
+            }
 
-        return response()->json($product);
+            foreach ($request->images as $image) {
+                $image = Image::create([
+                    'url' => $image,
+                    'product_id' => $product->id
+                ]);
+                $product->images()->save($image);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product created successfully',
+                'data' => $product
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create product',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.

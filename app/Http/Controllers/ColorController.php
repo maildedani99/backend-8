@@ -16,13 +16,36 @@ class ColorController extends Controller
 
     public function create(Request $request)
     {
-        $color = Color::create([
-            'name' => $request->get('name'),
-            'color' => $request->get('color'),
-
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'color' => 'required|string|max:255',
         ]);
-        return $color;
+
+        try {
+            // Crear el nuevo color
+            $color = Color::create([
+                'name' => $validatedData['name'],
+                'color' => $validatedData['color'],
+            ]);
+
+            // Devolver una respuesta de éxito
+            return response()->json([
+                'success' => true,
+                'message' => 'Color creado exitosamente.',
+                'color' => $color,
+            ], 201);
+
+        } catch (\Exception $e) {
+            // Devolver una respuesta de error en caso de excepción
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear el color.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
+
 
     public function delete($id)
     {

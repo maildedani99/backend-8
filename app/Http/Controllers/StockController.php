@@ -30,7 +30,12 @@ class StockController extends Controller
             $existingStock->quantity += $request->get('quantity');
             $existingStock->save();
 
-            return response()->json($existingStock);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Stock created successfully',
+            'data' => $existingStock    
+        ], 201);
         }
 
         // Si no existe, crear un nuevo registro
@@ -41,12 +46,16 @@ class StockController extends Controller
             'color_id' => $color_id,
         ]);
 
-        return response()->json($stock);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Stock created successfully',
+            'data' => $stock
+        ], 201);
     }
 
     public function delete($id)
     {
         Stock::where('id', $id)->delete();
-        
+
     }
 }

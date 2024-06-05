@@ -23,7 +23,7 @@ class CreateCustomersTable extends Migration
             $table->string('postal_code', 255);
             $table->string('phone', 255);
             $table->string('email', 255);
-            $table->string('dni', 255);
+            $table->string('dni', 255)->default(null);
             $table->timestamps();
         });
     }
