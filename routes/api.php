@@ -49,6 +49,9 @@ Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
 
 
+//app routes
+Route::get('data/all', 'App\Http\Controllers\DataController@getAllData');
+
 // products routes
 Route::get('products/all', 'App\Http\Controllers\ProductController@all');
 Route::get('products/allStock', 'App\Http\Controllers\ProductController@allStock');
