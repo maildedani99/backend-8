@@ -139,50 +139,84 @@ class ProductController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+
+
+
+    public function update(Request $request)
     {
-        //
+        try {
+            // Recuperar el ID del producto desde el cuerpo de la solicitud
+            $id = $request->get('product_id');
+
+            // Buscar el producto por ID
+            $product = Product::findOrFail($id);
+
+            // Actualizar los campos del producto
+            $product->update([
+                'name' => $request->get('name'),
+                'description' => $request->get('description'),
+                'price' => $request->get('price'),
+                'subcategory_id' => $request->get('subcategory_id'),
+                'reduced_price' => $request->get('reduced_price'),
+            ]);
+
+            // Actualizar la relación de novelty
+            if ($request->get('novelty') === true) {
+                if (!$product->novelty) {
+                    Novelty::create([
+                        'product_id' => $product->id
+                    ]);
+                }
+            } else {
+                if ($product->novelty) {
+                    $product->novelty->delete();
+                }
+            }
+
+            // Actualizar la relación de outlet
+            if ($request->get('outlet') === true) {
+                if (!$product->outlet) {
+                    Outlet::create([
+                        'product_id' => $product->id
+                    ]);
+                }
+            } else {
+                if ($product->outlet) {
+                    $product->outlet->delete();
+                }
+            }
+
+            // Actualizar imágenes
+            // Primero, eliminar las imágenes existentes si se ha proporcionado un nuevo conjunto de imágenes
+            if ($request->has('images')) {
+                $product->images()->delete();
+
+                foreach ($request->get('images') as $image) {
+                    Image::create([
+                        'url' => $image,
+                        'product_id' => $product->id
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Product updated successfully',
+                'data' => $product
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update product',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Product $product)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

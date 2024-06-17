@@ -22,6 +22,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('user', 'App\Http\Controllers\UserController@getAuthenticatedUser');
 
     Route::post('products/create', 'App\Http\Controllers\ProductController@create');
+    Route::post('products/update', 'App\Http\Controllers\ProductController@update');
+
     Route::post('images/create', 'App\Http\Controllers\ImageController@create');
     Route::post('categories/create', 'App\Http\Controllers\CategoryController@create');
     Route::post('novelties/create', 'App\Http\Controllers\NoveltyController@create');
