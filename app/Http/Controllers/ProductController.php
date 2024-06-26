@@ -6,93 +6,97 @@ use App\Models\Image;
 use App\Models\Product;
 use App\Models\Novelty;
 use App\Models\Outlet;
-use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all products.
      *
      * @return \Illuminate\Http\Response
      */
     public function all()
     {
-        return response()->json(Product::with('images')
-        ->get()
-        ->all());
+        $products = Product::with('images')->get();
+        return response()->json($products)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
+    /**
+     * Display a listing of all products with stock.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function allStock()
     {
-        return response()->json(Product::with('images')
-        ->has('stock')
-        ->get()
-        ->all());
+        $products = Product::with('images')->has('stock')->get();
+        return response()->json($products)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
+    /**
+     * Get a single product by ID.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function getById($id)
     {
-        $data = Product::with('images', 'stock')->where('id', $id)->get();
-        return response()->json($data);
+        $product = Product::with(['images', 'stock'])->where('id', $id)->first();
+        return response()->json($product)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
-
+    /**
+     * Display all outlet products.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function outlet()
     {
-        $outlets = Product::with(['outlet', 'images', 'stock'])
-        ->has('stock')
-        ->has('outlet')
-        ->get();
-        return response()->json($outlets);
+        $outlets = Product::with(['outlet', 'images', 'stock'])->has('stock')->has('outlet')->get();
+        return response()->json($outlets)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
+    /**
+     * Display all novelty products.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function novelties()
     {
-        $novelties = Product::with(['images', 'stock'])
-        ->has('stock')
-        ->has('novelties')  // Filtra solo los productos que tienen al menos un registro en la tabla st ock
-        ->get();
-        return response()->json($novelties);
+        $novelties = Product::with(['images', 'stock'])->has('stock')->has('novelties')->get();
+        return response()->json($novelties)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
+    /**
+     * Display all discounted products.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function discounts()
     {
-        return response()->json(Product::with('images')
-        ->has('stock')
-        ->where(function ($query) {
-            $query->where('reduced_price', '>', 0)
-                  ->orWhereNull('reduced_price');
-        })
-        ->get()
-        ->all());
+        $discounts = Product::with('images')->has('stock')->where(function ($query) {
+            $query->where('reduced_price', '>', 0)->orWhereNull('reduced_price');
+        })->get();
+        return response()->json($discounts)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
-    /*  public function getByCategory($category_id)
-    {
-        Log::info('Retrieving product with category: ' . $category_id);
-        $data = Product::with('images')->where('category_id', $category_id)->get();
-        return response()->json($data);
-    } */
-
+    /**
+     * Get products by subcategory ID.
+     *
+     * @param  int  $subcategory_id
+     * @return \Illuminate\Http\Response
+     */
     public function getBySubCategory($subcategory_id)
     {
-        Log::info('Retrieving product with category: ' . $subcategory_id);
-        $data = Product::with('images')
-        ->where('subcategory_id', $subcategory_id)
-        ->has('stock')
-        ->get();
-        return response()->json($data);
+        $products = Product::with('images')->where('subcategory_id', $subcategory_id)->has('stock')->get();
+        return response()->json($products)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
-
-    public function delete($id)
-    {
-        Product::where('id', $id)->delete();
-    }
-
-
+    /**
+     * Create a new product.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request)
     {
         try {
@@ -104,12 +108,12 @@ class ProductController extends Controller
                 'reduced_price' => $request->get('reduced_price'),
             ]);
 
-            if ($request->novelty === true) {
+            if ($request->has('novelty') && $request->get('novelty')) {
                 Novelty::create([
                     'product_id' => $product->id
                 ]);
             }
-            if ($request->outlet === true) {
+            if ($request->has('outlet') && $request->get('outlet')) {
                 Outlet::create([
                     'product_id' => $product->id
                 ]);
@@ -138,21 +142,18 @@ class ProductController extends Controller
         }
     }
 
-
-
-
-
-
+    /**
+     * Update an existing product.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request)
     {
         try {
-            // Recuperar el ID del producto desde el cuerpo de la solicitud
             $id = $request->get('product_id');
-
-            // Buscar el producto por ID
             $product = Product::findOrFail($id);
 
-            // Actualizar los campos del producto
             $product->update([
                 'name' => $request->get('name'),
                 'description' => $request->get('description'),
@@ -161,37 +162,22 @@ class ProductController extends Controller
                 'reduced_price' => $request->get('reduced_price'),
             ]);
 
-            // Actualizar la relación de novelty
-            if ($request->get('novelty') === true) {
-                if (!$product->novelty) {
-                    Novelty::create([
-                        'product_id' => $product->id
-                    ]);
-                }
+            // Handling novelty and outlet flags
+            if ($request->get('novelty')) {
+                Novelty::updateOrCreate(['product_id' => $id]);
             } else {
-                if ($product->novelty) {
-                    $product->novelty->delete();
-                }
+                Novelty::where('product_id', $id)->delete();
             }
 
-            // Actualizar la relación de outlet
-            if ($request->get('outlet') === true) {
-                if (!$product->outlet) {
-                    Outlet::create([
-                        'product_id' => $product->id
-                    ]);
-                }
+            if ($request->get('outlet')) {
+                Outlet::updateOrCreate(['product_id' => $id]);
             } else {
-                if ($product->outlet) {
-                    $product->outlet->delete();
-                }
+                Outlet::where('product_id', $id)->delete();
             }
 
-            // Actualizar imágenes
-            // Primero, eliminar las imágenes existentes si se ha proporcionado un nuevo conjunto de imágenes
+            // Update images if new ones are provided
             if ($request->has('images')) {
                 $product->images()->delete();
-
                 foreach ($request->get('images') as $image) {
                     Image::create([
                         'url' => $image,
@@ -215,17 +201,15 @@ class ProductController extends Controller
         }
     }
 
-
-
-
     /**
-     * Remove the specified resource from storage.
+     * Delete a product by ID.
      *
-     * @param  \App\Models\Product  $product
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function delete($id)
     {
-        //
+        Product::where('id', $id)->delete();
+        return response()->json(['success' => true, 'message' => 'Product deleted successfully'], 200);
     }
 }
