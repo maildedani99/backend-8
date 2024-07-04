@@ -104,6 +104,7 @@ Route::get('customers/all', 'App\Http\Controllers\CustomerController@all');
 // orders routes
 
 Route::get('orders/all', 'App\Http\Controllers\OrderController@all');
+Route::get('orders/{id}', 'App\Http\Controllers\OrderController@getById');
 Route::post('orders/completeOrderProcess', 'App\Http\Controllers\OrderProcessController@completeOrderProcess');
 
 

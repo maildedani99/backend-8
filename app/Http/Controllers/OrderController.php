@@ -17,7 +17,7 @@ class OrderController extends Controller
 
     public function create(Request $request)
     {
-       
+
         // Crear la orden
         $order = new Order();
         $order->customer_id = $request->customer_id;
@@ -44,6 +44,17 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             Log::error('Order processing failed', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Order processing failed', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getById($id)
+    {
+        try {
+            $order = Order::with(['items', 'customer'])->findOrFail($id);
+            return response()->json($order);
+        } catch (\Exception $e) {
+            Log::error('Order retrieval failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Order not found', 'details' => $e->getMessage()], 404);
         }
     }
 }
