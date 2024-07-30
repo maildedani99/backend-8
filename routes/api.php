@@ -88,23 +88,21 @@ Route::get('colors/all', 'App\Http\Controllers\ColorController@all');
 // Stock routes
 Route::get('stock/all', 'App\Http\Controllers\StockController@all');
 
-
-
 // email routes
 
 Route::get('email/all', 'App\Http\Controllers\EmailController@all');
 Route::post('email/create', 'App\Http\Controllers\EmailController@create');
 
-
 // customers routes
 
 Route::get('customers/all', 'App\Http\Controllers\CustomerController@all');
 
-
 // orders routes
 
+Route::post('/order/confirm/{orderNumber}', 'App\Http\Controllers\OrderController@confirmOrder');
 Route::get('orders/all', 'App\Http\Controllers\OrderController@all');
 Route::get('orders/{id}', 'App\Http\Controllers\OrderController@getById');
+Route::get('orders/order/{order}', 'App\Http\Controllers\OrderController@getByOrder');
 Route::post('orders/completeOrderProcess', 'App\Http\Controllers\OrderProcessController@completeOrderProcess');
 
 
@@ -118,7 +116,7 @@ Route::post('orderItems/delete', 'App\Http\Controllers\OrderItemController@delet
 
 // redsys routes
 Route::post('redsys/generate-signature', 'App\Http\Controllers\RedsysController@generateSignature');
-Route::post('redsys/handle-notification', 'App\Http\Controllers\RedsysController@handleNotification');
+Route::post('payment/notification', 'App\Http\Controllers\RedsysController@handleNotification');
 
 Route::post('redsys/handle-notificationOk', 'App\Http\Controllers\RedsysController@handleNotificationOk');
 

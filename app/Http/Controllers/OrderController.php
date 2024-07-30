@@ -23,7 +23,7 @@ class OrderController extends Controller
         $order->customer_id = $request->customer_id;
         $order->total = $request->orderAmount;
         $order->status = 'pending';
-        Log::info('order total', ['total'=>$order->total]);
+        Log::info('order total', ['total' => $order->total]);
 
         try {
             $order->save();
@@ -55,6 +55,33 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             Log::error('Order retrieval failed', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Order not found', 'details' => $e->getMessage()], 404);
+        }
+    }
+
+    public function getByOrder($order)
+    {
+        try {
+            $order = Order::with(['items', 'customer'])->where('ds_order', $order)->firstOrFail();
+            return response()->json($order);
+        } catch (\Exception $e) {
+            Log::error('Order retrieval failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Order not found', 'details' => $e->getMessage()], 404);
+        }
+    }
+
+    public function confirmOrder($orderNumber)
+    {
+        try {
+            $order = Order::where('ds_order', $orderNumber)->firstOrFail();
+            $order->status = 'completed';
+            $order->save();
+
+            Log::info('Order confirmed successfully', ['order_number' => $orderNumber]);
+
+            return response()->json(['message' => 'Order confirmed successfully'], 200);
+        } catch (\Exception $e) {
+            Log::error('Order confirmation failed', ['error' => $e->getMessage(), 'order_number' => $orderNumber]);
+            return response()->json(['error' => 'Order confirmation failed', 'details' => $e->getMessage()], 500);
         }
     }
 }
