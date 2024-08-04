@@ -29,7 +29,7 @@ class RedsysController extends Controller
         "DS_MERCHANT_ORDER" => $order,
         "DS_MERCHANT_TERMINAL" => "1",
         "DS_MERCHANT_TRANSACTIONTYPE" => "0",
-        "DS_MERCHANT_URLKO" => "http://localhost:3000/paymentOk",
+        "DS_MERCHANT_URLKO" => "http://localhost:3000/paymentKo",
         "DS_MERCHANT_URLOK" => "http://localhost:3000/paymentOk",
     ];
     $json = base64_encode(json_encode($json));
