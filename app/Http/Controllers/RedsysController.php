@@ -11,7 +11,7 @@ class RedsysController extends Controller
 
     public function generateSignature(Request $request)
 {
-    $secretKey = base64_decode('sq7HjrUOBfKmC576ILgskD5srU870gJ7');
+    $secretKey = base64_decode('uRoktylrzTI0bSrdFYyj3Sn9UgbSKEb8');
     $amount = $request->amount;
     $order = $request->order;
 
