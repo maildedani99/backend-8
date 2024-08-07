@@ -117,8 +117,10 @@ Route::post('orderItems/delete', 'App\Http\Controllers\OrderItemController@delet
 // redsys routes
 Route::post('redsys/generate-signature', 'App\Http\Controllers\RedsysController@generateSignature');
 Route::post('payment/notification', 'App\Http\Controllers\RedsysController@handleNotification');
-
 Route::post('redsys/handle-notificationOk', 'App\Http\Controllers\RedsysController@handleNotificationOk');
+
+Route::post('payment/mail', 'App\Http\Controllers\PagoController@procesarNotificacion');
+
 
 
 

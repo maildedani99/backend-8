@@ -20,7 +20,7 @@ class Order extends Model
     public static function generateDsOrder()
 {
     // Fijos "01" para los primeros dos dígitos
-    $prefix = "01";
+    $prefix = "02";
 
     // Obtiene los últimos 2 dígitos del año actual
     $year = date('y'); // 'y' devuelve los últimos dos dígitos del año
