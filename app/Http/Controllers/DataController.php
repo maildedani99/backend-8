@@ -23,9 +23,6 @@ class DataController extends Controller
             $novelties = Novelty::all();
             $outlets = Outlet::all();
 
-
-
-
             return response()->json([
                 'categories' => $categories,
                 'sizes' => $sizes,
@@ -35,6 +32,23 @@ class DataController extends Controller
                 'novelties' => $novelties,
                 'outlets' => $outlets
 
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error fetching data'], 500);
+        }
+    }
+
+
+    public function getSizesColors()
+    {
+        try {
+            $sizes = Size::all();
+            $colors = Color::all();
+
+            return response()->json([
+                'sizes' => $sizes,
+                'colors' => $colors,
             ], 200);
 
         } catch (\Exception $e) {

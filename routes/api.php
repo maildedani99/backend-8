@@ -49,8 +49,10 @@ Route::post('register', 'App\Http\Controllers\UserController@register');
 Route::post('login', 'App\Http\Controllers\UserController@authenticate');
 
 
-//app routes
+//data routes
 Route::get('data/all', 'App\Http\Controllers\DataController@getAllData');
+Route::get('data/sizesColors', 'App\Http\Controllers\DataController@getSizesColors');
+
 
 // products routes
 Route::get('products/all', 'App\Http\Controllers\ProductController@all');
