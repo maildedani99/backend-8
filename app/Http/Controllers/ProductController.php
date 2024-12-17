@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Novelty;
 use App\Models\Outlet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -44,6 +45,56 @@ class ProductController extends Controller
         return response()->json($product)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
+
+
+    public function getByIds(Request $request)
+
+    {
+        Log::info('Raw request body:', ['body' => $request->getContent()]);
+        try {
+            // Validar que el campo 'ids' esté presente y sea un array
+            $validated = $request->validate([
+                'ids' => 'required|array|min:1', // 'ids' debe ser un array con al menos un elemento
+                'ids.*' => 'integer|exists:products,id', // Cada elemento debe ser un entero válido que exista en la tabla 'products'
+            ]);
+
+            // Extraer los IDs validados
+            $ids = $validated['ids'];
+            Log::info('getByIds - IDs received:', $ids);
+
+            // Consultar los productos con relaciones
+            $products = Product::with(['images', 'stock'])
+                ->whereIn('id', $ids)
+                ->get();
+
+            Log::info('getByIds - Products retrieved:', ['products' => $products]);
+
+            // Retornar respuesta JSON con los productos
+            return response()->json($products);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('getByIds - Validation Error:', [
+                'errors' => $e->errors(),
+                'request' => $request->all(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('getByIds - Unexpected Error:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred',
+            ], 500);
+        }
+    }
+
+
     /**
      * Display all outlet products.
      *
@@ -73,7 +124,7 @@ class ProductController extends Controller
      */
     public function discounts()
     {
-        $discounts = Product::with('images')->has('stock')->where(function ($query) {
+        $discounts = Product::with('images')->has('stock')->doesntHave('outlet')->where(function ($query) {
             $query->where('reduced_price', '>', 0)->orWhereNull('reduced_price');
         })->get();
         return response()->json($discounts)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
