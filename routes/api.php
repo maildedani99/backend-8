@@ -23,6 +23,8 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 
     Route::post('products/create', 'App\Http\Controllers\ProductController@create');
     Route::post('products/update', 'App\Http\Controllers\ProductController@update');
+    
+
 
     Route::post('images/create', 'App\Http\Controllers\ImageController@create');
     Route::post('categories/create', 'App\Http\Controllers\CategoryController@create');
